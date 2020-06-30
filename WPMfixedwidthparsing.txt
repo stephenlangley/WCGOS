@@ -1,0 +1,35 @@
+
+======================================================================================
+link to textfieldparser?
+http://csharphelper.com/blog/2017/02/use-a-textfieldparser-to-read-fixed-width-data-c/
+
+
+
+===================================================================
+Link http://csvreader.readthedocs.io/en/latest/FixedWidthFileReader/
+
+using (var streamreader = new StreamReader(stream))
+{
+    reader = new FixedWidthFileReader(streamreader, "5,10, 10");
+    //...Code here
+}
+==================================================================
+
+https://stackoverflow.com/questions/37218799/read-fixed-width-text-file-into-datatable-row-by-row-c-sharp
+
+simple substring solution
+========================================================================================================
+
+This link uses FileHelper ?
+https://stackoverflow.com/questions/162727/read-fixed-width-record-from-text-file
+
+===========================================================================
+
+http://www.blackwasp.co.uk/ReadFixedWidth.aspx
+
+
+===============================================================================
+
+http://www.blackwasp.co.uk/WriteFixedWidth.aspx
+
+==========================================================================
