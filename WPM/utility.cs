@@ -12,6 +12,50 @@ namespace WPM
     class utility
     {
 
+
+        public static Boolean IsProcessed(String FTPfile)
+        {
+            String aCSName = "csUtility";
+            String aSqlQuery = "Select * from utility.dbo.WPM_FTP_Files wff where wff.BIMexist = 1 and wff.FTPfile = '" + FTPfile + "' ";
+
+            Boolean processed = false;
+            DataView transData = utility.readDataView(aCSName, aSqlQuery); // Get the data from the cloud
+
+            // Do a foreach here to get the total for the bankline for amount, net and fee
+            foreach (DataRowView drv in transData)// for each transaction
+            {
+                String bim = drv["BIMexist"].ToString();// Payment
+                processed = true;
+
+            }
+            return processed;
+        }
+
+        public static Boolean InsertFTPFile(String FTPfile)
+        {
+            String aCSName = "csUtility";
+            String aSqlQuery = "";
+
+            Boolean processed = false;
+            // convert the FTPfile date to a BatchID date which is the previous days date
+            string fileDate = FTPfile.Substring(20, 8);
+            DateTime dt = DateTime.ParseExact(fileDate, "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture).AddDays(-1);
+            string batchIDdate = dt.ToString("yyyyMMdd") + "-WPM.TXT";
+
+            aSqlQuery = "if not exists (select * from utility.dbo.WPM_FTP_FILES where FTPFile = '" + FTPfile + "') ";
+            aSqlQuery = aSqlQuery +  "Insert into utility.dbo.WPM_FTP_FILES (FTPfile, BatchID) values ('" + FTPfile + "' , '" + batchIDdate + "')";
+            aSqlQuery = aSqlQuery + " select * from utility.dbo.WPM_FTP_FILES where FTPFile = '" + FTPfile + "'";
+            DataView transData = utility.readDataView(aCSName, aSqlQuery); // Get the data from the cloud
+
+            // Do a foreach here to get the total for the bankline for amount, net and fee
+            foreach (DataRowView drv in transData)// for each transaction
+            {
+                String bim = drv["BIMexist"].ToString();// Payment
+                processed = true;
+
+            }
+            return processed;
+        }
         public static DataView readDataView(String aCSName, String aSqlQuery)
         {
             // ConnectionStrings are in the machine.config of the .net4 x86 fram

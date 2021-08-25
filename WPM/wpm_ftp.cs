@@ -70,6 +70,52 @@ namespace WPM
             return;
         }
 
+        // MyIsData
+        public Boolean MyFTPFileHasData(string remoteFile)
+        {
+            Boolean isData = false;
+            if (remoteFile.Trim().Length > 12)
+            {
+                try
+                {
+
+                    /* Create an FTP Request */
+                    ftpRequest = (FtpWebRequest)FtpWebRequest.Create(host + "/" + remoteFile);
+                    //ftpRequest = (FtpWebRequest)FtpWebRequest.Create(host);
+
+                    ftpRequest.UseBinary = false;
+                    ftpRequest.UsePassive = true;
+                    ftpRequest.KeepAlive = true;
+                    ftpRequest.Proxy = null;
+
+                    /* Specify the Type of FTP Request */
+                    ftpRequest.Method = WebRequestMethods.Ftp.DownloadFile;
+                    /* Log in to the FTP Server with the User Name and Password Provided */
+                    ftpRequest.Credentials = new NetworkCredential(user, pass);
+                    /* Establish Return Communication with the FTP Server */
+                    ftpResponse = (FtpWebResponse)ftpRequest.GetResponse();
+                    /* Get the FTP Server's Response Stream */
+                    ftpStream = ftpResponse.GetResponseStream();
+                    /* Open a File Stream to Write the Downloaded File */
+                    /* Buffer for the Downloaded Data */
+                    byte[] byteBuffer = new byte[bufferSize];
+                    int bytesRead = ftpStream.Read(byteBuffer, 0, bufferSize);
+                    if (bytesRead > 0)
+                    {
+                        isData = true;
+                    }
+                    ftpStream.Close();
+                    ftpResponse.Close();
+                    ftpRequest = null;
+                }
+                catch (Exception ex) { Console.WriteLine(ex.ToString()); }
+            }
+            return isData;
+        }
+
+
+
+
         /* Upload File */
         public void upload(string remoteFile, string localFile)
         {
@@ -89,7 +135,7 @@ namespace WPM
                 /* Establish Return Communication with the FTP Server */
                 ftpStream = ftpRequest.GetRequestStream();
                 /* Open a File Stream to Read the File for Upload */
-                FileStream localFileStream = new FileStream(localFile, FileMode.Create);
+                FileStream localFileStream = new FileStream(localFile, FileMode.Open);
                 /* Buffer for the Downloaded Data */
                 byte[] byteBuffer = new byte[bufferSize];
                 int bytesSent = localFileStream.Read(byteBuffer, 0, bufferSize);
