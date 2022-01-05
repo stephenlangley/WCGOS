@@ -23,7 +23,7 @@ namespace WPM
             Boolean doManual = false;  // change this to false if creating the auto exe.
             Boolean doWCGOS = true;
             Boolean WpmP = true;
-
+            //ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             //Boolean m = utility.InsertFTPFile("GL07_Store_Payments_20210201.txt");
 
             //Boolean myX = utility.IsProcessed("GL07_Store_Payments_20210214.txt");
@@ -118,31 +118,55 @@ namespace WPM
                 catch (Exception ex) { Console.WriteLine(ex.ToString()); }
 
                 // Process the WPM pathway download and upload files ================================================================
+               
                 WPM_Pathway wpm = new WPM_Pathway(wpmCPGPath, wpmCPGOpenPathway,UBWdataImport,wpmRCPPath, wpmRCPPlansPath, wpmRCPFailuresPath);
 
                 wpm.ProcessCPGdownload();
                 //wpm.ProcessCPGupload();
                 wpm.ProcessRCPDownload();
 
-
-                // Get FTP files from the online store
-                ftp ftpClient = new ftp(@" ftp://uk-ftp-1.wpmeducation.com", "WAR0127-01_store_edu_wpmhost_net_download", "yvn?ncLXfK--eO#7");
-                string[] simpleDirectoryListing = ftpClient.directoryListSimple("data_export");// get downloads from the data_export directory
-                for (int i = 0; i < simpleDirectoryListing.Count(); i++)
+                // This is thje new stuff for SFTP ===============================================
+                wpm_sftp sftpClient = new wpm_sftp(@"ftp-dx.wpmeducation.com", "WAR0127-01_store_edu_wpmhost_net_download", "yvn?ncLXfK--eO#7");
+                string[] simpleDirectoryListingx = sftpClient.simpledirectorylist("data_export");// get downloads from the data_export directory
+                for (int i = 0; i < simpleDirectoryListingx.Count(); i++)
                 {
-                    if (ftpClient.MyFTPFileHasData("data_export/" + simpleDirectoryListing[i])) utility.InsertFTPFile(simpleDirectoryListing[i]);//If FTP file has data then add the filename to the table for processing.
+                    //string xy = simpleDirectoryListingx[i];
+                    //Boolean hasData = sftpClient.MyFTPFileHasData("data_export/" + simpleDirectoryListingx[i]);
+                    //if (!File.Exists(wpmPath + simpleDirectoryListingx[i]) && simpleDirectoryListingx[i].Length > 0) sftpClient.download("data_export/" + simpleDirectoryListingx[i], wpmPath + simpleDirectoryListingx[i]);
+                    if (sftpClient.MyFTPFileHasData("data_export/" + simpleDirectoryListingx[i])) utility.InsertFTPFile(simpleDirectoryListingx[i]);//If FTP file has data then add the filename to the table for processing.
 
-                    if (!File.Exists(wpmPath + simpleDirectoryListing[i]) && simpleDirectoryListing[i].Length > 0)// if the file does not exist locally and the filename is greater than zero
+                    if (!File.Exists(wpmPath + simpleDirectoryListingx[i]) && simpleDirectoryListingx[i].Length > 0)// if the file does not exist locally and the filename is greater than zero
                     {
                         // Write a record to toyota.utility.WPM_FTP_Files if the file has data
 
                         // then download file
-                        ftpClient.download("data_export/" + simpleDirectoryListing[i], wpmPath + simpleDirectoryListing[i]);
-                        if (doManual) Console.WriteLine("Downloaded file: " + simpleDirectoryListing[i]);
+                        sftpClient.download("data_export/" + simpleDirectoryListingx[i], wpmPath + simpleDirectoryListingx[i]);
+                        if (doManual) Console.WriteLine("Downloaded file: " + simpleDirectoryListingx[i]);
                     }
-                    else if (simpleDirectoryListing[i].Length > 0) if (doManual) Console.WriteLine("This file exists locally, no need to download: " + simpleDirectoryListing[i]);
+                    else if (simpleDirectoryListingx[i].Length > 0) if (doManual) Console.WriteLine("This file exists locally, no need to download: " + simpleDirectoryListingx[i]);
+
                 }
-                ftpClient = null;
+                sftpClient = null;
+
+                //===============================================================================
+                // Get FTP files from the online store
+                //ftp ftpClient = new ftp(@" ftps://uk-ftp-1.wpmeducation.com:990", "WAR0127-01_store_edu_wpmhost_net_download", "yvn?ncLXfK--eO#7");
+                //string[] simpleDirectoryListing = ftpClient.directoryListSimple("data_export");// get downloads from the data_export directory
+                //for (int i = 0; i < simpleDirectoryListing.Count(); i++)
+                //{
+                //    if (ftpClient.MyFTPFileHasData("data_export/" + simpleDirectoryListing[i])) utility.InsertFTPFile(simpleDirectoryListing[i]);//If FTP file has data then add the filename to the table for processing.
+
+                //    if (!File.Exists(wpmPath + simpleDirectoryListing[i]) && simpleDirectoryListing[i].Length > 0)// if the file does not exist locally and the filename is greater than zero
+                //    {
+                //        // Write a record to toyota.utility.WPM_FTP_Files if the file has data
+
+                //        // then download file
+                //        ftpClient.download("data_export/" + simpleDirectoryListing[i], wpmPath + simpleDirectoryListing[i]);
+                //        if (doManual) Console.WriteLine("Downloaded file: " + simpleDirectoryListing[i]);
+                //    }
+                //    else if (simpleDirectoryListing[i].Length > 0) if (doManual) Console.WriteLine("This file exists locally, no need to download: " + simpleDirectoryListing[i]);
+                //}
+                //ftpClient = null;
 
 
 
@@ -172,7 +196,8 @@ namespace WPM
                 String batchIDDate = DateTime.Now.AddDays(-1).ToString("yyyyMMdd") + "-WPM.TXT";//Data within the file is always for the previous day so take 1 day off today.
 
                 wpmF = "GL07_Store_Payments_" + wpmDate + ".txt"; // todays file - not using this since I changed to the 'round tripping' with the toyota.utility.dbo.WPM_FTP_Files table
-
+                //comemt this line out when going live
+                //myFile = "20211213";
                 if (myFile.Length > 1) // get the  filename to process, if this is blank then we use todays file, see above
                 {
                     wpmF = "GL07_Store_Payments_" + myFile.ToString() + ".txt";

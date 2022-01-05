@@ -12,6 +12,7 @@ namespace WPM
         private string host = null;
         private string user = null;
         private string pass = null;
+        
         private FtpWebRequest ftpRequest = null;
         private FtpWebResponse ftpResponse = null;
         private Stream ftpStream = null;
@@ -21,6 +22,7 @@ namespace WPM
         public ftp(string hostIP, string userName, string password)
         {
             host = hostIP; user = userName; pass = password;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
         }
 
         /* Download File */
@@ -325,16 +327,21 @@ namespace WPM
             try
             {
                 /* Create an FTP Request */
-                ftpRequest = (FtpWebRequest)FtpWebRequest.Create(host + "/" + directory);
+                                                                                  
+                ftpRequest = (FtpWebRequest)FtpWebRequest.Create(host + "/" + directory); 
+
                 /* Log in to the FTP Server with the User Name and Password Provided */
                 ftpRequest.Credentials = new NetworkCredential(user, pass);
                 /* When in doubt, use these options */
+                
+                ftpRequest.EnableSsl = true;
                 ftpRequest.UseBinary = true;
                 ftpRequest.UsePassive = true;
                 ftpRequest.KeepAlive = true;
                 ftpRequest.Proxy = null;
                 /* Specify the Type of FTP Request */
                 ftpRequest.Method = WebRequestMethods.Ftp.ListDirectory;
+               
                 
                 /* Establish Return Communication with the FTP Server */
                 ftpResponse = (FtpWebResponse)ftpRequest.GetResponse();
