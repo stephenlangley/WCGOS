@@ -38,7 +38,7 @@ namespace WPM
                     // Get a list of the BatchId which have not been processed yet.
                     DataView transData = utility.readDataView("csWCGCloud", "Select batchId from trans where type = 'gl07' and actioned is NULL  Group by batchId"); // Get the data from the cloud
                     DateTime pDate = DateTime.Now; // use the date now to get todays batch
-                    String todaysBatch = pDate.ToString("yyyyMMdd") + "-STRIPE-ENROL"; // e.g. 20190312-STRIPE-ENROL
+                    String todaysBatch = pDate.ToString("yyyyMMdd") + "-STRIPE-SHUTL"; // e.g. 20190312-STRIPE-ENROL
                     String todaysBatchNew = pDate.ToString("yyyyMMdd"); //+ "-STRIPE-ENROL"; // e.g. 20190312-STRIPE-ENROL
                     Console.WriteLine("Process Batch ID's");                                                                   // for each BatchId process the payment based upon the BatchId Select * from trans where BatchId = BatchId and actioned = null
                     foreach (DataRowView batchID in transData)
@@ -122,11 +122,13 @@ namespace WPM
                 WPM_Pathway wpm = new WPM_Pathway(wpmCPGPath, wpmCPGOpenPathway,UBWdataImport,wpmRCPPath, wpmRCPPlansPath, wpmRCPFailuresPath);
 
                 wpm.ProcessCPGdownload();
-                //wpm.ProcessCPGupload();
-                wpm.ProcessRCPDownload();
+                ////wpm.ProcessCPGupload();
+                //wpm.ProcessRCPDownload();
 
-                // This is thje new stuff for SFTP ===============================================
-                wpm_sftp sftpClient = new wpm_sftp(@"ftp-dx.wpmeducation.com", "WAR0127-01_store_edu_wpmhost_net_download", "yvn?ncLXfK--eO#7");
+                // This is the new stuff for SFTP ===============================================
+                //wpm_sftp sftpClient = new wpm_sftp(@"ftp-dx.wpmeducation.com", "WAR0127-01_store_edu_wpmhost_net_download", "yvn?ncLXfK--eO#7");
+                // added new URL Early June 2023 for FLYWIRE
+                wpm_sftp sftpClient = new wpm_sftp(@"sftp.wpm.flywire.com", "WAR0127-01_store_edu_wpmhost_net_download", "yvn?ncLXfK--eO#7");
                 string[] simpleDirectoryListingx = sftpClient.simpledirectorylist("data_export");// get downloads from the data_export directory
                 for (int i = 0; i < simpleDirectoryListingx.Count(); i++)
                 {

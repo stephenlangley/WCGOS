@@ -51,7 +51,8 @@ namespace WPM
             // Get FTP files from the CPG download area
             //ftp ftpClient = new ftp(@"ftp://ftp-dx.wpmeducation.com", "WAR0127-01_cpg_edu_wpmhost_net_download", "NckEhnK!ifyyxeV5");
             //String[] simpleDirectoryListing = ftpClient.directoryListSimple("data_export");// get downloads from the data_export directory
-            wpm_sftp ftpClient = new wpm_sftp(@"ftp-dx.wpmeducation.com", "WAR0127-01_cpg_edu_wpmhost_net_download", "NckEhnK!ifyyxeV5");
+            //wpm_sftp ftpClient = new wpm_sftp(@"ftp-dx.wpmeducation.com", "WAR0127-01_cpg_edu_wpmhost_net_download", "NckEhnK!ifyyxeV5");
+            wpm_sftp ftpClient = new wpm_sftp(@"sftp.wpm.flywire.com", "WAR0127-01_cpg_edu_wpmhost_net_download", "NckEhnK!ifyyxeV5");
             string[] simpleDirectoryListing = ftpClient.simpledirectorylist("data_export");// get downloads from the data_export directory
 
 
@@ -104,7 +105,8 @@ namespace WPM
            // ftp ftpClient = new ftp(@" ftp://uk-ftp-1.wpmeducation.com", "WAR0127-01_rcp_download", "3gfw6SRklU9OGg%8");
             //String[] simpleDirectoryListing = ftpClient.directoryListSimple("data_export");// get downloads from the data_export directory
 
-            wpm_sftp ftpClient = new wpm_sftp(@"ftp-dx.wpmeducation.com", "WAR0127-01_rcp_download", "3gfw6SRklU9OGg%8");
+            //wpm_sftp ftpClient = new wpm_sftp(@"ftp-dx.wpmeducation.com", "WAR0127-01_rcp_download", "3gfw6SRklU9OGg%8");
+            wpm_sftp ftpClient = new wpm_sftp(@"sftp.wpm.flywire.com", "WAR0127-01_rcp_download", "3gfw6SRklU9OGg%8");
             string[] simpleDirectoryListing = ftpClient.simpledirectorylist("data_export");// get downloads from the data_export directory
 
             for (int i = 0; i < simpleDirectoryListing.Count(); i++)
