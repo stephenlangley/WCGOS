@@ -100,7 +100,7 @@ namespace WPM
                 fw.TransType = "GL".PadRight(2); // The FEE line goes to the General Ledger
                 fw.Account = "88201".PadRight(25); // The STRIPE FEE account is 88201
                 fw.Cat1 = "".PadRight(25); // Clear the cat field
-                fw.Cat2 = "P020C".PadRight(25); // This is the PROJECT field - set to P019C for STRIPE FEES
+                fw.Cat2 = "P020C".PadRight(25); // This is the PROJECT field - set to P020C for ShuttleID - set to P019C for STRIPE FEES
                 fw.Cat3 = "".PadRight(25); // Clear the Cat fields
                 fw.Cat4 = "".PadRight(25); // Clear the Cat fields
                 fw.Cat5 = "".PadRight(25); // Clear the Cat fields
@@ -108,7 +108,7 @@ namespace WPM
                 fw.TaxCode = "0".PadRight(25); // Clear the tax code
                 fw.CurAmount = totFee.ToString().PadLeft(20); // Total amount for the bank - this is calculated above.
                 fw.Amount = totFee.ToString().PadLeft(20); // Total amount for the bank
-                fw.Description = "STRIPE Acc:12345678 FEES for ShuttleID".PadRight(255); // Description of the bank transaction i.e. Cardnet 54063298 Worlpay - We are using STRIPE
+                fw.Description = "STRIPE: acct_1DflXBJlKaSTX3ee FEES for ShuttleID".PadRight(255); // Description of the bank transaction i.e. Cardnet 54063298 Worlpay - We are using STRIPE
                 fw.ExtInvRef = "Banking Date " + fw.TransDate.Trim();
                 fw.ExtInvRef.PadRight(100);
                 fw.ExtRef = fw.Description.ToString().PadRight(255);
@@ -135,7 +135,7 @@ namespace WPM
             fw.TaxCode = "0".PadRight(25); // Clear the tax code
             fw.CurAmount = totNet.ToString().PadLeft(20); // Total NET amount for the bank - this is calculated above.
             fw.Amount = totNet.ToString().PadLeft(20); // Total NET amount for the bank - this is basically the payment minus any fees that stripe take out.
-            fw.Description = "STRIPE Acc:12345678 BANK for ShuttleID".PadRight(255); // Description of the bank transaction i.e. Cardnet 54063298 Worlpay - We are using STRIPE
+            fw.Description = "STRIPE: acct_1DflXBJlKaSTX3ee BANK for ShuttleID".PadRight(255); // Description of the bank transaction i.e. Cardnet 54063298 Worlpay - We are using STRIPE
             fw.ExtInvRef = "Banking Date " + fw.TransDate.Trim();
             fw.ExtInvRef.PadRight(100);
             fw.ExtRef = fw.Description.ToString().PadRight(255);
